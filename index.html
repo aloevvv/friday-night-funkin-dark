@@ -1,1 +1,113 @@
-// i dont have anything yet
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>FNF: Dark Minds</title>
+<style>
+    body {
+        margin: 0;
+        overflow: hidden;
+        background: black;
+        font-family: sans-serif;
+    }
+
+    #loading-screen, #title-screen {
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 1s ease;
+    }
+
+    #loading-text {
+        color: white;
+        font-size: 32px;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px black;
+    }
+
+    #progress-container {
+        width: 60%;
+        height: 20px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    #progress-bar {
+        width: 0%;
+        height: 100%;
+        background: white;
+        transition: width 0.2s linear;
+    }
+
+    #title-screen {
+        opacity: 0;
+        pointer-events: none;
+    }
+</style>
+</head>
+<body>
+
+<div id="loading-screen" style="background-image: url('backgrounds/loading.png');">
+    <div id="loading-text">LOADING...</div>
+    <div id="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</div>
+
+<div id="title-screen" style="background-image: url('backgrounds/title.png');"></div>
+
+<script>
+
+    const assets = [
+        "backgrounds/title.png",
+        "backgrounds/loading.png"
+    ];
+
+    let loaded = 0;
+
+    function preloadAsset(src) {
+        return new Promise((resolve) => {
+            let element;
+
+            if (src.endsWith(".png") || src.endsWith(".jpg")) {
+                element = new Image();
+                element.onload = resolve;
+                element.src = src;
+            } else {
+                element = new Audio();
+                element.oncanplaythrough = resolve;
+                element.src = src;
+                element.load();
+            }
+        });
+    }
+
+    async function preloadAll() {
+        for (const src of assets) {
+            await preloadAsset(src);
+            loaded++;
+
+            const percent = Math.floor((loaded / assets.length) * 100);
+            document.getElementById("progress-bar").style.width = percent + "%";
+        }
+
+        document.getElementById("loading-text").textContent = "LOADED!";
+        await new Promise(r => setTimeout(r, 1000));
+        document.getElementById("loading-screen").style.opacity = 0;
+
+        setTimeout(() => {
+            document.getElementById("title-screen").style.opacity = 1;
+        }, 1000);
+    }
+
+    preloadAll();
+</script>
+
+</body>
+</html>
