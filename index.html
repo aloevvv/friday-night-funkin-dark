@@ -75,7 +75,16 @@
     50% { opacity: 0.5; }
     100% { opacity: 1; }
 }
+    
+.fade-in {
+    opacity: 0;
+    animation: fadeInAnim 1s forwards ease;
+}
 
+@keyframes fadeInAnim {
+    from { opacity: 0; }
+    to { opacity: 0.8; }
+}
 
     #disclaimer-screen {
     position: absolute;
@@ -107,7 +116,7 @@
 #press-enter {
     position: absolute;
     font-size: 18px;
-    opacity: 0.8;
+    opacity: 0.6;
     top: 60%
 }
 
@@ -200,7 +209,12 @@ async function showDisclaimer() {
     d.style.opacity = 1;
     d.style.pointerEvents = "auto";
     disclaimerActive = true;
+    
+    setTimeout(() => {
+        document.getElementById("press-enter").classList.add("fade-in");
+    }, 2000);
 }
+
     
     document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && disclaimerActive) {
