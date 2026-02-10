@@ -46,7 +46,37 @@
     background-position: center;
     transition: opacity 1s ease;
 }
+#title-buttons {
+    position: absolute;
+    bottom: 10%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
 
+.menu-btn {
+    font-family: "Blue Winter", sans-serif;
+    font-size: 32px;
+    padding: 14px 50px;
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: 3px solid white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.15s cubic-bezier(0.2, 0.8, 0.4, 1),
+                box-shadow 0.15s ease,
+                background 0.15s ease;
+    transform-origin: center;
+}
+
+.menu-btn:hover {
+    transform: scale(1.12);
+    background: rgba(255,255,255,0.2);
+    box-shadow: 0 0 18px rgba(255,255,255,0.6);
+}
 
     #loading-text {
         color: white;
@@ -144,8 +174,13 @@
     <div id="press-enter">Press [ENTER] to continue</div>
 </div>
 
-
 <div id="title-screen" style="background-image: url('backgrounds/title.png');"></div>
+<div id="title-buttons">
+    <button class="menu-btn" id="btn-play">Play</button>
+    <button class="menu-btn" id="btn-continue">Continue</button>
+    <button class="menu-btn" id="btn-settings">Settings</button>
+</div>
+
 
 <script>
 
