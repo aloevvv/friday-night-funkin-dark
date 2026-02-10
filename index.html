@@ -55,6 +55,17 @@
         background: white;
         transition: width 0.2s linear;
     }
+    
+    .flash {
+    animation: flashAnim 1.2s infinite ease-in-out;
+}
+
+@keyframes flashAnim {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
 
     #disclaimer-screen {
     position: absolute;
@@ -166,6 +177,7 @@ With that, enjoy at your risk.
 `;
 
 document.getElementById("disclaimer-text").textContent = disclaimerText;
+document.getElementById("disclaimer-text").classList.add("flash");
 
 let disclaimerActive = false;
 
