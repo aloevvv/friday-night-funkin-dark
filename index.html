@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8">  
 <title>FNF: Dark Minds</title>
 <link rel="icon" type="image/png" href="favicon.png" />
 <style>
@@ -56,6 +56,35 @@
         transition: width 0.2s linear;
     }
 
+    #disclaimer-screen {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+#disclaimer-text {
+    font-size: 24px;
+    max-width: 800px;
+    margin-bottom: 20px;
+}
+
+#press-enter {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
     #title-screen {
         opacity: 0;
         pointer-events: none;
@@ -71,13 +100,20 @@
     </div>
 </div>
 
+<div id="disclaimer-screen" style="background-image: url('backgrounds/disclaimer.png');">
+    <div id="disclaimer-text"></div>
+    <div id="press-enter">Press ENTER to continue</div>
+</div>
+
+
 <div id="title-screen" style="background-image: url('backgrounds/title.png');"></div>
 
 <script>
 
     const assets = [
         "backgrounds/title.png",
-        "backgrounds/loading.png"
+        "backgrounds/loading.png",
+        "backgrounds/disclaimer.png"
     ];
 
     let loaded = 0;
@@ -100,24 +136,68 @@
     }
 
     async function preloadAll() {
-        for (const src of assets) {
-            await preloadAsset(src);
-            loaded++;
+    for (const src of assets) {
+        await preloadAsset(src);
+        loaded++;
 
-            const percent = Math.floor((loaded / assets.length) * 100);
-            document.getElementById("progress-bar").style.width = percent + "%";
-        }
+        const percent = Math.floor((loaded / assets.length) * 100);
+        document.getElementById("progress-bar").style.width = percent + "%";
+    }
 
-        document.getElementById("loading-text").textContent = "LOADED!";
-        await new Promise(r => setTimeout(r, 1000));
-        document.getElementById("loading-screen").style.opacity = 0;
+    document.getElementById("loading-text").textContent = "LOADED!";
+    await new Promise(r => setTimeout(r, 1000));
 
+    document.getElementById("loading-screen").style.opacity = 0;
+
+    setTimeout(() => {
+        const d = document.getElementById("disclaimer-screen");
+        d.style.opacity = 1;
+        d.style.pointerEvents = "auto";
+        disclaimerActive = true;
+    }, 1000);
+}
+
+const disclaimerText = `
+This game contains content that may not be suitable for everyone.
+Such topics include emotional abuse and toxic relationships.
+It is an AU, so characters may act out of character.
+With that, enjoy at your risk.
+`;
+
+document.getElementById("disclaimer-text").textContent = disclaimerText;
+
+let disclaimerActive = false;
+
+async function showDisclaimer() {
+    const d = document.getElementById("disclaimer-screen");
+    d.style.opacity = 1;
+    d.style.pointerEvents = "auto";
+    disclaimerActive = true;
+}
+    
+    document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && disclaimerActive) {
+        disclaimerActive = false;
+
+        const d = document.getElementById("disclaimer-screen");
+        d.style.opacity = 0;
+        d.style.pointerEvents = "none";
+        
         setTimeout(() => {
             document.getElementById("title-screen").style.opacity = 1;
         }, 1000);
     }
+});
 
     preloadAll();
+    
+    // below i will yoink things from my previous game
+
+    let gameFlags = {
+        placeholder: false,
+        place: false
+    };
+    
 </script>
 
 </body>
