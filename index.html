@@ -20,6 +20,11 @@
     font-family: "Docallisme";
     src: url("fonts/DOCALLISMEONSTREET.ttf") format("truetype");
 }
+    .gradient-text {
+    background: linear-gradient(90deg, #ff4d4d, #ffa64d, #ffff4d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
     #loading-screen {
     position: absolute;
@@ -128,7 +133,7 @@
 <body>
 
 <div id="loading-screen" style="background-image: url('backgrounds/loading.png');">
-    <div id="loading-text">LOADING...</div>
+    <div id="loading-text" class="gradient-text fade-in">LOADING...</div>
     <div id="progress-container">
         <div id="progress-bar"></div>
     </div>
