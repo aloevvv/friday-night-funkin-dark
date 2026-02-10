@@ -12,17 +12,27 @@
         font-family: sans-serif;
     }
 
-    #loading-screen, #title-screen {
-        position: absolute;
-        inset: 0;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 1s ease;
-    }
+    #loading-screen {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease;
+}
+
+#title-screen {
+    position: absolute;
+    inset: 0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    transition: opacity 1s ease;
+}
+
 
     #loading-text {
         color: white;
