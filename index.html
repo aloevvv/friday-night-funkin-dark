@@ -188,12 +188,7 @@
 
     document.getElementById("loading-screen").style.opacity = 0;
 
-    setTimeout(() => {
-        const d = document.getElementById("disclaimer-screen");
-        d.style.opacity = 1;
-        d.style.pointerEvents = "auto";
-        disclaimerActive = true;
-    }, 1000);
+    setTimeout(showDisclaimer, 1000);
 }
 
 const disclaimerText = `
