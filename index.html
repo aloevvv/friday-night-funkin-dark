@@ -730,8 +730,8 @@ sprite.style.opacity = 1;
 
 
     if (line.speaker && line.mood) {
-      sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
-      sprite.className = "char " + (line.position || "center");
+    sprite.src = `./sprites/${line.speaker}-${line.mood}.png`;
+    sprite.className = "char " + (line.position || "center");
 
       if (line.position === "right") sprite.classList.add("flip");
     }
