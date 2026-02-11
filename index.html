@@ -736,6 +736,10 @@ sprite.style.opacity = 1;
 
 
     if (line.speaker && line.mood) {
+        sprite.onerror = () => {
+    alert("Dialogue tried: " + sprite.src);
+};
+
     sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
     sprite.className = "char " + (line.position || "center");
 
@@ -782,6 +786,9 @@ function closeDialog() {
       applyDialogStyle(box, line.style);
 
       if (line.speaker && line.mood) {
+          sprite.onerror = () => {
+    alert("Dialogue tried: " + sprite.src);
+};
         sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
         sprite.className = "char " + (line.position || "center");
         if (line.position === "left") sprite.classList.add("flip");
