@@ -776,7 +776,7 @@ function closeDialog() {
       applyDialogStyle(box, line.style);
 
       if (line.speaker && line.mood) {
-        sprite.src = `sprites/${line.speaker}_${line.mood}.png`;
+        sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
         sprite.className = "char " + (line.position || "center");
         if (line.position === "left") sprite.classList.add("flip");
       }
