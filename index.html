@@ -429,6 +429,18 @@ async function showDisclaimer() {
 
 
     preloadAll();
+
+    document.getElementById("btn-play").onclick = () => {
+    document.getElementById("title-buttons").style.display = "none";
+        showDialog([
+  {
+    speaker: "Test",
+    mood: "something",
+    position: "left",
+    text: "Hello"
+  }
+]);
+};
     
     // below i will yoink things from my previous game
 
@@ -445,16 +457,8 @@ document.getElementById("btn-settings").onclick = () => {
   document.getElementById("settings-menu").style.display = "flex";
   document.getElementById("title-buttons").style.display = "none";
   updateSettingsUI();
-            showDialog([
-  {
-    speaker: "Test",
-    mood: "something",
-    position: "left",
-    text: "Hello"
-  }
-]);
-    
 };
+        
 document.getElementById("menu-back").onclick = () => {
   document.getElementById("settings-menu").style.display = "none";
   document.getElementById("title-buttons").style.display = "flex";
