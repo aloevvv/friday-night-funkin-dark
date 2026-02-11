@@ -431,6 +431,12 @@ async function showDisclaimer() {
 const fontOptions = ["SMALL", "NORMAL", "LARGE"];
 const speedOptions = ["SLOW", "NORMAL", "FAST", "INSTANT"];
 
+document.getElementById("btn-settings").onclick = () => {
+  document.getElementById("settings-menu").style.display = "flex";
+  updateSettingsUI();
+};
+
+
 function updateSettingsUI() {
   document.getElementById("font-value").textContent = fontOptions[settings.fontSize];
   document.getElementById("speed-value").textContent = speedOptions[settings.speed];
