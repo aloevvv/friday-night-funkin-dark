@@ -223,7 +223,7 @@
   text-align: center;
   width: 100%;
   margin-bottom: 6px;
-  font-family: 'Blue Winter', sans-serif;
+  font-family: 'Comic Sans', sans-serif;
   font-size: 22px;
   color: #ffffff; 
 }
@@ -565,7 +565,7 @@ config.speed = speedMap[settings.speed];
   charSound.volume = 0.5;
 
   let i = 0;
-  element.innerHTML = speaker ? `<strong>${speaker}</strong>\n\n` : "";
+  element.innerHTML = "";
 
   _typingInterval = setInterval(() => {
     if (i < text.length) {
@@ -597,7 +597,7 @@ function finishTyping(element, onFinish = null) {
   clearInterval(_typingInterval);
   _isTyping = false;
   
-  element.innerHTML = _currentSpeaker ? `<strong>${_currentSpeaker}</strong>\n\n` : "";
+  element.innerHTML = "";
   for (let i = 0; i < _fullTextToDisplay.length; i++) {
     const span = document.createElement('span');
     span.className = 'dialog-char';
