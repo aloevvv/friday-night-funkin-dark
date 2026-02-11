@@ -335,11 +335,15 @@
 
 <script>
 
-    const assets = [
-        "backgrounds/title.png",
-        "backgrounds/loading.png",
-        "backgrounds/disclaimer.png"
-    ];
+const assets = [
+    "backgrounds/title.png",
+    "backgrounds/loading.png",
+    "backgrounds/disclaimer.png",
+    "assets/checkbox_empty.png",
+    "assets/checkbox_check.png",
+    "assets/arrow_right.png",
+    "assets/arrow_left.png"
+];
 
     let loaded = 0;
 
@@ -452,7 +456,7 @@ function updateSettingsUI() {
   document.getElementById("speed-value").textContent = speedOptions[settings.speed];
 
   document.getElementById("skip-box").src =
-    settings.skipPrologue ? "assets/checkbox_checked.png" : "assets/checkbox_empty.png";
+    settings.skipPrologue ? "assets/checkbox_check.png" : "assets/checkbox_empty.png";
 }
 
 document.getElementById("font-left").onclick = () => {
