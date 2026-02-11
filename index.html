@@ -409,10 +409,10 @@ const assets = [
     setTimeout(showDisclaimer, 1000);
 }
 
-    let img = new Image();
+let img = new Image();
 img.onload = () => alert("Loaded!");
 img.onerror = () => alert("FAILED: " + img.src);
-img.src = "sprites/Pico-determined.png";
+img.src = `sprites/Pico-determined.png`;
 
 
 const disclaimerText = `
