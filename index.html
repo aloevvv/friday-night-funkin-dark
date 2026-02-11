@@ -715,51 +715,78 @@ function applyDialogStyle(box, style) {
     box.style.fontSize = '18px';
   }
 }
-
-    function showDialog(lines, opts = {}) {
-  const textDiv = document.getElementById("dialog-text");
-  const box = document.getElementById("dialog-box");
-  const sprite = document.getElementById("dialog-sprite");
-  const bg = document.getElementById("dialog-background");
-
-box.style.display = "block";
-box.style.opacity = 1;
-
-bg.style.display = "block";
-bg.style.opacity = 1;
-
-sprite.style.display = "block";
-sprite.style.opacity = 1;
-
-
-  if (opts.background) {
-    bg.style.backgroundImage = `url(${opts.background})`;
-  }
-
-  _dialogQueue = normalizeDialogLines(lines, opts.style || "dialog");
-  if (_dialogQueue.length > 0) {
-    const line = _dialogQueue.shift();
+    function renderLine(line) {
+    const textDiv = document.getElementById("dialog-text");
+    const box = document.getElementById("dialog-box");
+    const sprite = document.getElementById("dialog-sprite");
+    const bg = document.getElementById("dialog-background");
 
     applyDialogStyle(box, line.style);
-      
-      if (line.speaker) {
-    document.getElementById("dialog-speaker").textContent = line.speaker;
-} else {
-    document.getElementById("dialog-speaker").textContent = "";
+    
+    if (line.background) {
+    const path = `backgrounds/${line.background}.png`;
+    bg.style.backgroundImage = `url(${path})`;
 }
-
 
     if (line.speaker && line.mood) {
-
-    sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
-    sprite.className = "char " + (line.position || "center");
-
-      if (line.position === "right") sprite.classList.add("flip");
+        sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
+        sprite.className = "char " + line.position;
+        if (line.position === "right") sprite.classList.add("flip");
+        sprite.style.display = "block";
+    } else {
+        sprite.style.display = "none";
     }
+
+    if (line.triggers) {
+        line.triggers.forEach(trig => handleTrigger(trig));
+    }
+
+    document.getElementById("dialog-speaker").textContent = line.speaker || "";
     applyFontSetting();
     startTypewriter(line.text, textDiv, line.speaker, line.effect);
-  }
 }
+
+    function handleTrigger(trig) {
+    switch(trig.type) {
+        case "sfx":
+            new Audio(trig.value).play().catch(e => {});
+            break;
+        case "shake":
+            document.body.style.animation = "none";
+            setTimeout(() => { document.body.style.animation = "shake 0.5s"; }, 10);
+            break;
+        case "flash":
+            const fx = document.getElementById("fade-overlay");
+            fx.style.transition = "none";
+            fx.style.background = "white";
+            fx.style.opacity = 1;
+            setTimeout(() => {
+                fx.style.transition = "opacity 0.5s ease";
+                fx.style.opacity = 0;
+            }, 50);
+            break;
+        case "flag":
+            gameFlags[trig.key] = trig.value;
+            break;
+        case "meter":
+            meters[trig.key] += trig.value;
+            console.log(`${trig.key} is now ${meters[trig.key]}`);
+            break;
+    }
+}
+
+
+
+function showDialog(lines, opts = {}) {
+    _dialogQueue = normalizeDialogLines(lines, opts.style);
+    document.getElementById("dialog-box").style.display = "block";
+    document.getElementById("dialog-background").style.display = "block";
+    
+    if (_dialogQueue.length > 0) {
+        renderLine(_dialogQueue.shift());
+    }
+}
+
 
 
 function closeDialog() {
@@ -781,38 +808,23 @@ function closeDialog() {
 }
 
 
-    document.addEventListener("keydown", e => {
+ document.addEventListener("keydown", e => {
   if (e.key === "Enter") {
-    const textDiv = document.getElementById("dialog-text");
-    const box = document.getElementById("dialog-box");
-    const sprite = document.getElementById("dialog-sprite");
 
     if (_isTyping) {
-      finishTyping(textDiv, _currentOnFinish);
+      finishTyping(document.getElementById("dialog-text"), _currentOnFinish);
       return;
     }
 
     if (_dialogQueue.length > 0) {
-      const line = _dialogQueue.shift();
-
-      applyDialogStyle(box, line.style);
-
-      if (line.speaker && line.mood) {
-
-        sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
-        sprite.className = "char " + (line.position || "center");
-
-        if (line.position === "right") sprite.classList.add("flip");
-      } else {
-        sprite.src = "";
-      }
-
-      startTypewriter(line.text, textDiv, line.speaker, line.effect);
+      renderLine(_dialogQueue.shift());
       return;
     }
+
     closeDialog();
   }
 });
+
 
     
 function draw() {
