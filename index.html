@@ -414,16 +414,6 @@ async function showDisclaimer() {
         const d = document.getElementById("disclaimer-screen");
         d.style.opacity = 0;
         d.style.pointerEvents = "none";
-
-        showDialog([
-  {
-    speaker: "Test",
-    mood: "something",
-    position: "left",
-    text: "Hello"
-  }
-]);
-
         
         setTimeout(() => {
             document.getElementById("title-screen").style.opacity = 1;
@@ -455,6 +445,15 @@ document.getElementById("btn-settings").onclick = () => {
   document.getElementById("settings-menu").style.display = "flex";
   document.getElementById("title-buttons").style.display = "none";
   updateSettingsUI();
+            showDialog([
+  {
+    speaker: "Test",
+    mood: "something",
+    position: "left",
+    text: "Hello"
+  }
+]);
+    
 };
 document.getElementById("menu-back").onclick = () => {
   document.getElementById("settings-menu").style.display = "none";
