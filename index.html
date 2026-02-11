@@ -702,7 +702,7 @@ sprite.style.opacity = 1;
       sprite.src = `sprites/${line.speaker}_${line.mood}.png`;
       sprite.className = "char " + (line.position || "center");
 
-      if (line.position === "left") sprite.classList.add("flip");
+      if (line.position === "right") sprite.classList.add("flip");
     }
     applyFontSetting();
     startTypewriter(line.text, textDiv, line.speaker, line.effect);
@@ -713,9 +713,14 @@ sprite.style.opacity = 1;
 function closeDialog() {
   const textDiv = document.getElementById("dialog-text");
   const sprite = document.getElementById("dialog-sprite");
+  const box = document.getElementById("dialog-box");
+  const bg = document.getElementById("dialog-background");
 
   textDiv.innerHTML = "";
   sprite.src = "";
+  box.style.display = "none";
+  bg.style.display = "none";
+  sprite.style.display = "none";
 
   _isTyping = false;
   clearInterval(_typingInterval);
