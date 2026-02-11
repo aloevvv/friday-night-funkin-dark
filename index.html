@@ -185,6 +185,16 @@
     <button class="menu-btn" id="btn-settings">Settings</button>
 </div>
 
+    <div id="dialog-overlay" style="display:none; position:fixed; inset:0; z-index:2500; background:rgba(0,0,0,0.6); align-items:flex-end; justify-content:center; padding:20px;">
+  <div id="dialog-box" style="background:#0e2057; color:white; border:2px solid black; padding:16px; max-width:640px; font-family:'Press Start 2P',sans-serif;">
+    <div id="dialog-text" style="white-space:pre-wrap; font-size:12px; line-height:1.2;"></div>
+    <div style="text-align:right; margin-top:8px;">
+      <button id="dialog-next" style="font-family:'Blue Winter',sans-serif; padding:8px 12px;">Next</button>
+    </div>
+  </div>
+</div>
+
+
 
 <script>
 
@@ -283,6 +293,206 @@ async function showDisclaimer() {
         placeholder: false,
         place: false
     };
+    
+    const speakerConfigs = {
+  'guy': { speed: 30, pitch: 1.0, frequency: 2, sound: 'blip.wav' },
+  'default': { speed: 30, pitch: 1.0, frequency: 2, sound: 'blub2.mp3' }
+};
+
+const shownDialogs = new Set();
+let _dialogQueue = [];
+let _typingInterval = null;
+let _isTyping = false;
+let _fullTextToDisplay = "";
+let _currentSpeaker = null;
+let _currentEffect = null;
+let _currentOnFinish = null;
+
+    function startTypewriter(text, element, speaker = null, effect = null, onFinish = null) {
+  clearInterval(_typingInterval);
+  _isTyping = true;
+  _fullTextToDisplay = text;
+  _currentSpeaker = speaker;
+  _currentEffect = effect;
+  _currentOnFinish = onFinish;
+
+  const config = speakerConfigs[speaker] || speakerConfigs['default'];
+  const charSound = new Audio(config.sound);
+  charSound.volume = 0.5;
+
+  let i = 0;
+  element.innerHTML = speaker ? `<strong>${speaker}</strong>\n\n` : "";
+
+  _typingInterval = setInterval(() => {
+    if (i < text.length) {
+      const char = text.charAt(i);
+      const span = document.createElement('span');
+      span.className = 'dialog-char';
+      span.textContent = char;
+      if (effect === 'shaky') span.classList.add('effect-shake');
+      if (effect === 'sine' || effect === 'wave') {
+          span.classList.add('effect-wave');
+          span.style.animationDelay = (i * 0.1) + 's';
+      }
+      if (effect === 'glitch') span.classList.add('effect-glitch');
+      element.appendChild(span);
+
+      if (i % config.frequency === 0) {
+        const playClone = charSound.cloneNode();
+        playClone.playbackRate = config.pitch;
+        playClone.play().catch(e => {});
+      }
+      i++;
+    } else {
+      finishTyping(element, onFinish);
+    }
+  }, config.speed);
+}
+
+function finishTyping(element, onFinish = null) {
+  clearInterval(_typingInterval);
+  _isTyping = false;
+  
+  element.innerHTML = _currentSpeaker ? `<strong>${_currentSpeaker}</strong>\n\n` : "";
+  for (let i = 0; i < _fullTextToDisplay.length; i++) {
+    const span = document.createElement('span');
+    span.className = 'dialog-char';
+    span.textContent = _fullTextToDisplay[i];
+    if (_currentEffect === 'shaky') span.classList.add('effect-shake');
+    if (_currentEffect === 'sine' || _currentEffect === 'wave') {
+        span.classList.add('effect-wave');
+        span.style.animationDelay = (i * 0.1) + 's';
+    }
+    if (_currentEffect === 'glitch') span.classList.add('effect-glitch');
+    element.appendChild(span);
+  }
+  if (onFinish) onFinish();
+}
+
+function normalizeDialogLines(textOrLines, defaultStyle) {
+  const lines = Array.isArray(textOrLines) ? textOrLines.slice() : [String(textOrLines)];
+  return lines.map(line => {
+    if (typeof line === 'string') {
+      return { speaker: null, text: line, style: defaultStyle || 'dialog', effect: null };
+    }
+    return {
+      speaker: line.speaker || null,
+      text: line.text != null ? String(line.text) : '',
+      style: line.style || defaultStyle || 'dialog',
+      effect: line.effect || null
+    };
+  });
+}
+
+function applyDialogStyle(box, style) {
+  box.style.maxWidth = '640px';
+  box.style.fontSize = '12px';
+  if (style === 'other') {
+    box.style.background = '#223344';
+    box.style.fontSize = '14px';
+  } else if (style === 'a') {
+    box.style.background = '#78bdff';
+    box.style.fontSize = '14px';
+  } else if (style === 'npc') {
+    box.style.background = '#b7b7b7';
+    box.style.fontSize = '14px';
+  } else if (style === 'unit') {
+    box.style.background = '#4c4c4c';
+    box.style.fontSize = '14px';
+  } else if (style === 'boss') {
+    box.style.background = '#330000';
+    box.style.fontSize = '12px';
+    } else if (style === 'd') {
+    box.style.background = '#ca2f2f';
+    box.style.fontSize = '12px';
+  } else {
+    box.style.background = '#0e2057';
+    box.style.fontSize = '12px';
+  }
+}
+
+function showDialogWithOptions(dialogText, options, idToMark, opts = {}) {
+  const overlay = document.getElementById('dialog-overlay');
+  const box = document.getElementById('dialog-box');
+  const textDiv = document.getElementById('dialog-text');
+  const nextBtn = document.getElementById('dialog-next');
+
+  overlay.style.display = 'flex';
+  overlay._markId = idToMark || null;
+  nextBtn.style.display = 'none';
+
+  applyDialogStyle(box, opts.style || 'dialog');
+
+  startTypewriter(dialogText, textDiv, opts.speaker || null, opts.effect, () => {
+    textDiv.appendChild(document.createElement('br'));
+    textDiv.appendChild(document.createElement('br'));
+
+    options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.textContent = opt.label;
+      btn.className = 'item-use-button';
+      btn.style.margin = '8px 10px 0 0';
+      btn.style.padding = '8px 16px';
+      btn.style.fontSize = '14px';
+      btn.onclick = () => {
+        overlay.style.display = 'none';
+        if (opt.onSelect) opt.onSelect();
+        if (idToMark) shownDialogs.add(idToMark);
+        draw();
+      };
+      textDiv.appendChild(btn);
+    });
+  });
+}
+
+function showDialog(textOrLines, idToMark, opts = {}) {
+  document.getElementById('dialog-next').style.display = 'inline-block';
+  const overlay = document.getElementById('dialog-overlay');
+  const box = document.getElementById('dialog-box');
+  const textDiv = document.getElementById('dialog-text');
+  const defaultStyle = opts.style || 'dialog';
+
+  overlay.style.display = 'flex';
+  _dialogQueue = normalizeDialogLines(textOrLines, defaultStyle);
+
+  if (_dialogQueue.length > 0) {
+    const line = _dialogQueue.shift();
+    applyDialogStyle(box, line.style);
+    
+    startTypewriter(line.text, textDiv, line.speaker, line.effect);
+  }
+  
+  overlay._markId = idToMark || null;
+  overlay._onComplete = opts.onComplete || null; 
+  draw();
+}
+
+   // later 
+function closeDialog() {
+    const overlay = document.getElementById("dialog-overlay");
+    const textDiv = document.getElementById("dialog-text");
+
+    overlay.style.display = "none";
+    textDiv.innerHTML = "";
+
+    _isTyping = false;
+    clearInterval(_typingInterval);
+
+    if (overlay._markId) {
+        shownDialogs.add(overlay._markId);
+        overlay._markId = null;
+    }
+
+    if (overlay._onComplete) {
+        overlay._onComplete();
+        overlay._onComplete = null;
+    }
+
+    draw();
+}
+function draw() {
+    //nothing
+}
     
 </script>
 
