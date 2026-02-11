@@ -770,6 +770,7 @@ function closeDialog() {
     const textDiv = document.getElementById("dialog-text");
     const box = document.getElementById("dialog-box");
     const sprite = document.getElementById("dialog-sprite");
+
     if (_isTyping) {
       finishTyping(textDiv, _currentOnFinish);
       return;
@@ -781,12 +782,16 @@ function closeDialog() {
       applyDialogStyle(box, line.style);
 
       if (line.speaker && line.mood) {
-          sprite.onerror = () => {
-    alert("Dialogue tried: " + sprite.src);
-};
+        sprite.onerror = () => {
+          alert("Dialogue tried: " + sprite.src);
+        };
+
         sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
         sprite.className = "char " + (line.position || "center");
+
         if (line.position === "left") sprite.classList.add("flip");
+      } else {
+        sprite.src = "";
       }
 
       startTypewriter(line.text, textDiv, line.speaker, line.effect);
@@ -795,6 +800,7 @@ function closeDialog() {
     closeDialog();
   }
 });
+
 
     
 function draw() {
