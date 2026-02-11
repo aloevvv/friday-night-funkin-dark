@@ -231,6 +231,17 @@
   color: white;
 }
 
+#settings-box {
+  background: #0e0e0e;
+  border: 2px solid #444;
+  padding: 40px 60px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .settings-title {
   font-size: 70px;
   margin-bottom: 40px;
@@ -259,13 +270,7 @@
   height: 50px;
   cursor: pointer;
 }
-
-#settings-back img {
-  width: 120px;
-  cursor: pointer;
-  margin-top: 40px;
-}
-
+    
 </style>
 </head>
 <body>
@@ -312,7 +317,7 @@
   </div>
 
   <div id="settings-back">
-    <img src="assets/back_button.png">
+    <button class="menu-btn" id="menu-back">Back</button>
   </div>
 
 </div>
@@ -430,10 +435,17 @@ async function showDisclaimer() {
 const fontOptions = ["SMALL", "NORMAL", "LARGE"];
 const speedOptions = ["SLOW", "NORMAL", "FAST", "INSTANT"];
 
+
 document.getElementById("btn-settings").onclick = () => {
   document.getElementById("settings-menu").style.display = "flex";
+  document.getElementById("title-buttons").style.display = "none";
   updateSettingsUI();
 };
+document.getElementById("menu-back").onclick = () => {
+  document.getElementById("settings-menu").style.display = "none";
+  document.getElementById("title-buttons").style.display = "block";
+};
+
 
 
 function updateSettingsUI() {
