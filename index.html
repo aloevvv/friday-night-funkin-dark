@@ -650,10 +650,19 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
   const lines = Array.isArray(textOrLines) ? textOrLines.slice() : [String(textOrLines)];
   return lines.map(line => {
     if (typeof line === 'string') {
-      return { speaker: null, text: line, style: defaultStyle || 'dialog', effect: null };
+      return { 
+        speaker: null, 
+        text: line, 
+        style: defaultStyle || 'dialog', 
+        effect: null, 
+        mood: null, 
+        position: 'center' 
+      };
     }
     return {
       speaker: line.speaker || null,
+      mood: line.mood || null,
+      position: line.position || 'center',
       text: line.text != null ? String(line.text) : '',
       style: line.style || defaultStyle || 'dialog',
       effect: line.effect || null
@@ -731,9 +740,6 @@ sprite.style.opacity = 1;
 
 
     if (line.speaker && line.mood) {
-        sprite.onerror = () => {
-    alert("Dialogue tried: " + sprite.src);
-};
 
     sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
     sprite.className = "char " + (line.position || "center");
@@ -782,14 +788,11 @@ function closeDialog() {
       applyDialogStyle(box, line.style);
 
       if (line.speaker && line.mood) {
-        sprite.onerror = () => {
-          alert("Dialogue tried: " + sprite.src);
-        };
 
         sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
         sprite.className = "char " + (line.position || "center");
 
-        if (line.position === "left") sprite.classList.add("flip");
+        if (line.position === "right") sprite.classList.add("flip");
       } else {
         sprite.src = "";
       }
@@ -800,7 +803,6 @@ function closeDialog() {
     closeDialog();
   }
 });
-
 
     
 function draw() {
