@@ -409,6 +409,12 @@ const assets = [
     setTimeout(showDisclaimer, 1000);
 }
 
+    let img = new Image();
+img.onload = () => alert("Loaded!");
+img.onerror = () => alert("FAILED: " + img.src);
+img.src = "sprites/Pico-determined.png";
+
+
 const disclaimerText = `
 This game contains content that may not be suitable for everyone.
 Such topics include emotional abuse and toxic relationships.
