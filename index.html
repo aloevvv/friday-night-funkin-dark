@@ -658,6 +658,16 @@ function applyDialogStyle(box, style) {
   const sprite = document.getElementById("dialog-sprite");
   const bg = document.getElementById("dialog-background");
 
+box.style.display = "block";
+box.style.opacity = 1;
+
+bg.style.display = "block";
+bg.style.opacity = 1;
+
+sprite.style.display = "block";
+sprite.style.opacity = 1;
+
+
   if (opts.background) {
     bg.style.backgroundImage = `url(${opts.background})`;
   }
