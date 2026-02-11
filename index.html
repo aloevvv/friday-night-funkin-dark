@@ -414,6 +414,16 @@ async function showDisclaimer() {
         const d = document.getElementById("disclaimer-screen");
         d.style.opacity = 0;
         d.style.pointerEvents = "none";
+
+        showDialog([
+  {
+    speaker: "Test",
+    mood: "something",
+    position: "left",
+    text: "Hello"
+  }
+]);
+
         
         setTimeout(() => {
             document.getElementById("title-screen").style.opacity = 1;
