@@ -779,6 +779,21 @@ function applyDialogStyle(box, style) {
                 fx.style.opacity = 0;
             }, 50);
             break;
+            case "branch":
+        handleBranch(trig);
+        break;
+            case "giveItem":
+    inventory.set(trig.key, (inventory.get(trig.key) || 0) + trig.value);
+    break;
+
+case "takeItem":
+    inventory.set(trig.key, Math.max(0, (inventory.get(trig.key) || 0) - trig.value));
+    break;
+
+case "requireItem":
+    if (!inventory.get(trig.key)) {
+    }
+    break;
         case "flag":
             gameFlags[trig.key] = trig.value;
             break;
@@ -789,8 +804,23 @@ function applyDialogStyle(box, style) {
     }
 }
 
+function handleBranch(trig) {
 
+    const condition = trig.flag ? gameFlags[trig.flag] : null;
+    const meterValue = trig.meter ? meters[trig.meter] : null;
 
+    let goTo = null;
+
+    if (trig.flag) {
+        goTo = condition ? trig.ifTrue : trig.ifFalse;
+    } else if (trig.meter) {
+        goTo = meterValue >= trig.min ? trig.ifTrue : trig.ifFalse;
+    }
+
+    if (goTo) {
+        loadDialogue(goTo);
+    }
+}
 function showDialog(lines, opts = {}) {
     _dialogQueue = normalizeDialogLines(lines, opts.style);
     document.getElementById("dialog-box").style.display = "block";
