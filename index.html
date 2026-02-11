@@ -218,6 +218,16 @@
   font-size: 12px;
   line-height: 1.2;
 }
+    
+    #dialog-speaker {
+  text-align: center;
+  width: 100%;
+  margin-bottom: 6px;
+  font-family: 'Blue Winter', sans-serif;
+  font-size: 22px;
+  color: #ffffff; 
+}
+
 #settings-menu {
   position: fixed;
   inset: 0;
@@ -329,8 +339,10 @@
 <img id="dialog-sprite" class="char" src="" alt="">
 
 <div id="dialog-box">
+  <div id="dialog-speaker"></div>
   <div id="dialog-text"></div>
 </div>
+
 
 
 
@@ -677,6 +689,13 @@ sprite.style.opacity = 1;
     const line = _dialogQueue.shift();
 
     applyDialogStyle(box, line.style);
+      
+      if (line.speaker) {
+    document.getElementById("dialog-speaker").textContent = line.speaker;
+} else {
+    document.getElementById("dialog-speaker").textContent = "";
+}
+
 
     if (line.speaker && line.mood) {
       sprite.src = `sprites/${line.speaker}_${line.mood}.png`;
