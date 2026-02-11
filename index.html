@@ -218,6 +218,54 @@
   font-size: 12px;
   line-height: 1.2;
 }
+#settings-menu {
+  position: fixed;
+  inset: 0;
+  background: url("backgrounds/title.png");
+  background-size: cover;
+  background-position: center;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 60px;
+  font-family: 'Blue Winter';
+  color: white;
+}
+
+.settings-title {
+  font-size: 24px;
+  margin-bottom: 40px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  font-size: 16px;
+}
+
+.settings-label {
+  margin: 0 20px;
+}
+
+.arrow {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}
+
+#settings-back img {
+  width: 120px;
+  cursor: pointer;
+  margin-top: 40px;
+}
 
 </style>
 </head>
@@ -242,6 +290,33 @@
     <button class="menu-btn" id="btn-settings">Settings</button>
 </div>
 
+<div id="settings-menu" style="display:none;">
+
+    
+  <div class="settings-title">SETTINGS</div>
+
+  <div class="settings-row">
+    <img class="arrow left" id="font-left" src="assets/arrow_left.png">
+    <span class="settings-label">FONT: <span id="font-value">NORMAL</span></span>
+    <img class="arrow right" id="font-right" src="assets/arrow_right.png">
+  </div>
+
+  <div class="settings-row">
+    <img class="arrow left" id="speed-left" src="assets/arrow_left.png">
+    <span class="settings-label">SPEED: <span id="speed-value">NORMAL</span></span>
+    <img class="arrow right" id="speed-right" src="assets/arrow_right.png">
+  </div>
+
+  <div class="settings-row">
+    <span class="settings-label">SKIP PROLOGUE</span>
+    <img id="skip-box" class="checkbox" src="assets/checkbox_empty.png">
+  </div>
+
+  <div id="settings-back">
+    <img src="assets/back_button.png">
+  </div>
+
+</div>
 
     
 <div id="dialog-background"></div>
@@ -348,6 +423,60 @@ async function showDisclaimer() {
     
     // below i will yoink things from my previous game
 
+    let settings = {
+  fontSize: 1,
+  speed: 1,
+  skipPrologue: false
+};
+const fontOptions = ["SMALL", "NORMAL", "LARGE"];
+const speedOptions = ["SLOW", "NORMAL", "FAST", "INSTANT"];
+
+function updateSettingsUI() {
+  document.getElementById("font-value").textContent = fontOptions[settings.fontSize];
+  document.getElementById("speed-value").textContent = speedOptions[settings.speed];
+
+  document.getElementById("skip-box").src =
+    settings.skipPrologue ? "assets/checkbox_checked.png" : "assets/checkbox_empty.png";
+}
+
+document.getElementById("font-left").onclick = () => {
+  if (settings.fontSize > 0) {
+    settings.fontSize--;
+    updateSettingsUI();
+  }
+};
+
+document.getElementById("font-right").onclick = () => {
+  if (settings.fontSize < fontOptions.length - 1) {
+    settings.fontSize++;
+    updateSettingsUI();
+  }
+};
+
+document.getElementById("speed-left").onclick = () => {
+  if (settings.speed > 0) {
+    settings.speed--;
+    updateSettingsUI();
+  }
+};
+
+document.getElementById("speed-right").onclick = () => {
+  if (settings.speed < speedOptions.length - 1) {
+    settings.speed++;
+    updateSettingsUI();
+  }
+};
+    document.getElementById("skip-box").onclick = () => {
+  settings.skipPrologue = !settings.skipPrologue;
+  updateSettingsUI();
+};
+
+    document.getElementById("settings-back").onclick = () => {
+  document.getElementById("settings-menu").style.display = "none";
+};
+
+
+
     let gameFlags = {
         placeholder: false,
         place: false
@@ -375,7 +504,16 @@ let _currentOnFinish = null;
   _currentEffect = effect;
   _currentOnFinish = onFinish;
 
-  const config = speakerConfigs[speaker] || speakerConfigs['default'];
+const speedMap = {
+  0: 60,
+  1: 30,
+  2: 10,
+  3: 0
+};
+
+const config = speakerConfigs[speaker] || speakerConfigs['default'];
+config.speed = speedMap[settings.speed];
+
   const charSound = new Audio(config.sound);
   charSound.volume = 0.5;
 
@@ -443,6 +581,15 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
   });
 }
 
+    function applyFontSetting() {
+  const textDiv = document.getElementById("dialog-text");
+
+  if (settings.fontSize === 0) textDiv.style.fontSize = "10px";
+  if (settings.fontSize === 1) textDiv.style.fontSize = "12px";
+  if (settings.fontSize === 2) textDiv.style.fontSize = "16px";
+}
+
+
 function applyDialogStyle(box, style) {
   box.style.maxWidth = '640px';
   box.style.fontSize = '12px';
@@ -481,7 +628,6 @@ function applyDialogStyle(box, style) {
   }
 
   _dialogQueue = normalizeDialogLines(lines, opts.style || "dialog");
-
   if (_dialogQueue.length > 0) {
     const line = _dialogQueue.shift();
 
@@ -493,7 +639,7 @@ function applyDialogStyle(box, style) {
 
       if (line.position === "left") sprite.classList.add("flip");
     }
-
+    applyFontSetting();
     startTypewriter(line.text, textDiv, line.speaker, line.effect);
   }
 }
