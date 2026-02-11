@@ -295,10 +295,9 @@
 </div>
 
 <div id="settings-menu" style="display:none;">
-
+    <div id="settings-box">
     
   <div class="settings-title">SETTINGS</div>
-
   <div class="settings-row">
     <img class="arrow left" id="font-left" src="assets/arrow_left.png">
     <span class="settings-label">FONT: <span id="font-value">NORMAL</span></span>
@@ -319,7 +318,7 @@
   <div id="settings-back">
     <button class="menu-btn" id="menu-back">Back</button>
   </div>
-
+ </div>
 </div>
 
     
@@ -443,7 +442,7 @@ document.getElementById("btn-settings").onclick = () => {
 };
 document.getElementById("menu-back").onclick = () => {
   document.getElementById("settings-menu").style.display = "none";
-  document.getElementById("title-buttons").style.display = "block";
+  document.getElementById("title-buttons").style.display = "flex";
 };
 
 
