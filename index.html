@@ -59,6 +59,16 @@
     pointer-events: none;
     transition: opacity 0.8s ease;
 }
+    #fade-overlay {
+    position: fixed;
+    inset: 0;
+    background: black;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.5s ease;
+    z-index: 99999;
+}
+
 
 .menu-btn {
     font-family: "Blue Winter", sans-serif;
@@ -334,6 +344,7 @@
  </div>
 </div>
 
+    <div id="fade-overlay"></div>
     
 <div id="dialog-background"></div>
 
@@ -443,17 +454,35 @@ async function showDisclaimer() {
 
     preloadAll();
 
-    document.getElementById("btn-play").onclick = () => {
-    document.getElementById("title-buttons").style.display = "none";
-        showDialog([
-  {
-    speaker: "Test",
-    mood: "something",
-    position: "left",
-    text: "Hello"
-  }
-]);
+ document.getElementById("btn-play").onclick = () => {
+    const titleButtons = document.getElementById("title-buttons");
+    const titleScreen = document.getElementById("title-screen");
+    const fade = document.getElementById("fade-overlay");
+
+    titleButtons.style.opacity = 0;
+    titleButtons.style.pointerEvents = "none";
+    titleScreen.style.opacity = 0;
+
+    fade.style.opacity = 1;
+    setTimeout(() => {
+        titleButtons.style.display = "none";
+        titleScreen.style.display = "none";
+        fade.style.opacity = 0;
+        setTimeout(() => {
+            showDialog([
+                {
+                    speaker: "Test",
+                    mood: "something",
+                    position: "left",
+                    style: "4later",
+                    text: "Hello"
+                }
+            ]);
+        }, 1500);
+
+    }, 1500);
 };
+
     
     // below i will yoink things from my previous game
 
