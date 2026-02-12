@@ -303,6 +303,33 @@
   height: 50px;
   cursor: pointer;
 }
+
+    #dev-console {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  border-bottom: 2px solid #555;
+  padding: 10px;
+  z-index: 10000;
+  font-family: monospace;
+}
+
+#dev-input {
+  width: 90%;
+  background: transparent;
+  border: none;
+  color: #0f0;
+  font-size: 18px;
+  outline: none;
+}
+
+#dev-hint {
+  color: #666;
+  font-size: 12px;
+}
     
 </style>
 </head>
@@ -352,6 +379,11 @@
     <button class="menu-btn" id="menu-back">Back</button>
   </div>
  </div>
+</div>
+
+    <div id="dev-console">
+    <div id="dev-hint">CONSOLE</div>
+    <input type="text" id="dev-input" placeholder="Enter command...">
 </div>
 
       <div id="fade-overlay"></div>
@@ -883,7 +915,68 @@ function closeDialog() {
   }
 });
 
+const devConsole = document.getElementById("dev-console");
+const devInput = document.getElementById("dev-input");
 
+// Toggle with the "-" key
+document.addEventListener("keydown", (e) => {
+    if (e.key === "-") {
+        e.preventDefault();
+        const isVisible = devConsole.style.display === "block";
+        devConsole.style.display = isVisible ? "none" : "block";
+        if (!isVisible) devInput.focus();
+    }
+});
+
+// Execute on Enter click
+devInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        executeDevCommand(devInput.value);
+        devInput.value = "";
+        devConsole.style.display = "none";
+    }
+});
+
+function executeDevCommand(input) {
+    const parts = input.trim().split(/\s+/);
+    const cmd = parts[0].toLowerCase();
+    const args = parts.slice(1);
+
+    switch (cmd) {
+        case '/help':
+            console.log("Commands: /show [scene], /give [item] [qty], /flag [key] [true/false], /meter [key] [val]");
+            break;
+
+        case '/show':
+            console.log("Forcing dialogue:", args[0]);
+            loadDialogue(args[0]);
+            break;
+
+        case '/give':
+            const item = args[0];
+            const qty = parseInt(args[1]) || 1;
+            inventory.set(item, (inventory.get(item) || 0) + qty);
+            console.log(`Inventory: ${item} is now ${inventory.get(item)}`);
+            break;
+
+        case '/flag':
+            const key = args[0];
+            const val = args[1] === "true";
+            gameFlags[key] = val;
+            console.log(`Flag ${key} set to ${val}`);
+            break;
+
+        case '/meter':
+            const mKey = args[0];
+            const mVal = parseInt(args[1]);
+            meters[mKey] = mVal;
+            console.log(`Meter ${mKey} set to ${mVal}`);
+            break;
+
+        default:
+            console.log("Unknown command. Type /help");
+    }
+}
     
 function draw() {
     //nothing
