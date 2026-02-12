@@ -225,7 +225,7 @@
 .char {
   position: absolute;
   display: none;
-  top: 45%;
+  top: 47%;
   left: 50%;
   transform: translate(-50%, -50%);
   height: 300px;
@@ -235,12 +235,12 @@
 
 .char.left {
   left: 37%;
-  top: 45%;
+  top: 47%;
   transform: translate(-50%, -50%);
 }
 
 .char.right {
-  top: 45%;
+  top: 47%;
   right: 37%;
   transform: translate(-25%, -50%);
 }
@@ -751,7 +751,8 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
         mood: null, 
         position: 'center',
         background: null,
-        triggers: []
+        triggers: [],
+        choices: []
       };
     }
     return {
@@ -762,7 +763,8 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
       style: line.style || defaultStyle || 'dialog',
       effect: line.effect || null,
       background: line.background || null,
-      triggers: line.triggers || [] 
+      triggers: line.triggers || [],
+      choices: line.choices || []
     };
   });
 }
