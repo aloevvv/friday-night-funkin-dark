@@ -215,7 +215,7 @@
 }
 
 .char.flip {
-  transform: scaleX(-1);
+  scale: -1 1; 
 }
 
 #dialog-box {
@@ -770,21 +770,27 @@ function applyDialogStyle(box, style) {
     const bg = document.getElementById("dialog-background");
 
     applyDialogStyle(box, line.style);
-    
+
     if (line.background) {
-        let bgPath = line.background.includes('backgrounds/') ? line.background : `backgrounds/${line.background}`;
+        let bgPath = line.background;
+        if (!bgPath.includes('backgrounds/')) bgPath = `backgrounds/${bgPath}`;
         if (!bgPath.endsWith('.png') && !bgPath.endsWith('.jpg')) bgPath += '.png';
-        bg.style.backgroundImage = `url(${bgPath})`;
+        
+        bg.style.backgroundImage = `url('${bgPath}')`;
+        bg.style.display = "block";
     }
 
     if (line.speaker && line.mood) {
         sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
         sprite.className = "char " + (line.position || "center");
-        if (line.position === "right") sprite.classList.add("flip");
+        if (line.position === "right") {
+            sprite.classList.add("flip");
+        }
+        
         sprite.style.display = "block";
     } else {
         sprite.style.display = "none";
-        sprite.src = "";
+        sprite.src = ""; 
     }
 
     if (line.triggers) {
