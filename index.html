@@ -738,17 +738,19 @@ function applyDialogStyle(box, style) {
     applyDialogStyle(box, line.style);
     
     if (line.background) {
-    const path = `backgrounds/${line.background}.png`;
-    bg.style.backgroundImage = `url(${path})`;
-}
+        let bgPath = line.background.includes('backgrounds/') ? line.background : `backgrounds/${line.background}`;
+        if (!bgPath.endsWith('.png') && !bgPath.endsWith('.jpg')) bgPath += '.png';
+        bg.style.backgroundImage = `url(${bgPath})`;
+    }
 
     if (line.speaker && line.mood) {
         sprite.src = `sprites/${line.speaker}-${line.mood}.png`;
-        sprite.className = "char " + line.position;
+        sprite.className = "char " + (line.position || "center");
         if (line.position === "right") sprite.classList.add("flip");
         sprite.style.display = "block";
     } else {
         sprite.style.display = "none";
+        sprite.src = "";
     }
 
     if (line.triggers) {
