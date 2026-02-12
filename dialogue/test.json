@@ -1,0 +1,11 @@
+{
+  "text": "Something happens",
+  "choices": [
+    { 
+      "text": "go go go", 
+      "timer": 2000, 
+      "onSelect": { "scene": "prologue", "sfx": "na.mp3" },
+      "onFail": { "type": "gameOver", "sfx": "na.mp3" }
+    }
+  ]
+}
