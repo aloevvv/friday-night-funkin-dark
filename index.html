@@ -805,7 +805,6 @@ case "requireItem":
 }
 
 function handleBranch(trig) {
-
     const condition = trig.flag ? gameFlags[trig.flag] : null;
     const meterValue = trig.meter ? meters[trig.meter] : null;
 
@@ -818,9 +817,21 @@ function handleBranch(trig) {
     }
 
     if (goTo) {
+        console.log("Branching to:", goTo);
         loadDialogue(goTo);
     }
 }
+    async function loadDialogue(sceneName) {
+    try {
+        const response = await fetch(`dialogue/${sceneName}.json`);
+        const data = await response.json();
+
+        showDialog(data);
+    } catch (err) {
+        console.error("Failed to load dialogue:", sceneName, err);
+    }
+}
+    
 function showDialog(lines, opts = {}) {
     _dialogQueue = normalizeDialogLines(lines, opts.style);
     document.getElementById("dialog-box").style.display = "block";
