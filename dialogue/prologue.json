@@ -25,5 +25,53 @@
     "text": "But I’m not giving up.",
     "style": "pico",
     "triggers": []
+  },
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "Wait.",
+    "style": "pico",
+    "triggers": []
+  },
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "I think that's him.",
+    "style": "pico",
+    "triggers": []
+  },
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "BOYFRIEND?!",
+    "style": "pico",
+    "triggers": []
+  },
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "Oh, fuck, I can’t possibly kill him. I would’ve never taken this job if I knew I had to kill him…",
+    "style": "pico",
+    "triggers": []
+  },
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "He’s coming closer, I have to act normal or something…",
+    "style": "pico",
+    "triggers": []
+  },
+  {
+    "speaker": "Boyfriend",
+    "mood": "neutral",
+    "position": "right",
+    "text": "Pico.",
+    "style": "bf",
+    "triggers": []
   }
 ]
