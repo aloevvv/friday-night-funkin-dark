@@ -1,0 +1,29 @@
+[
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "background": "street",
+    "text": "So… the guy said that the target liked to hang around here. Apparently.",
+    "style": "pico",
+    "triggers": []
+  },
+
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "I’ve been here for a couple days and I’ve never even seen him once.",
+    "style": "pico",
+    "triggers": []
+  },
+
+  {
+    "speaker": "Pico",
+    "mood": "neutral",
+    "position": "left",
+    "text": "But I’m not giving up.",
+    "style": "pico",
+    "triggers": []
+  }
+]
