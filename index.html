@@ -719,7 +719,9 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
         style: defaultStyle || 'dialog', 
         effect: null, 
         mood: null, 
-        position: 'center' 
+        position: 'center',
+        background: null,
+        triggers: []
       };
     }
     return {
@@ -728,7 +730,9 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
       position: line.position || 'center',
       text: line.text != null ? String(line.text) : '',
       style: line.style || defaultStyle || 'dialog',
-      effect: line.effect || null
+      effect: line.effect || null,
+      background: line.background || null,
+      triggers: line.triggers || [] 
     };
   });
 }
