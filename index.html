@@ -918,7 +918,6 @@ function closeDialog() {
 const devConsole = document.getElementById("dev-console");
 const devInput = document.getElementById("dev-input");
 
-// Toggle with the "-" key
 document.addEventListener("keydown", (e) => {
     if (e.key === "-") {
         e.preventDefault();
@@ -928,7 +927,6 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
-// Execute on Enter click
 devInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         executeDevCommand(devInput.value);
