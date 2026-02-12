@@ -192,7 +192,35 @@
   background-color: black; 
   z-index: 1;
 }
+    
+#choice-container {
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 100;
+}
 
+.choice-btn {
+    font-family: 'Blue Winter', sans-serif;
+    background: rgba(14, 32, 87, 0.95);
+    color: white;
+    border: 3px solid white;
+    padding: 15px 30px;
+    font-size: 24px;
+    cursor: pointer;
+    min-width: 300px;
+    transition: all 0.2s;
+}
+
+.choice-btn:hover {
+    background: white;
+    color: #0e2057;
+    transform: scale(1.05);
+}
 
 .char {
   position: absolute;
@@ -390,6 +418,8 @@
     <input type="text" id="dev-input" placeholder="Enter command...">
 </div>
 
+    <div id="choice-container" style="display:none;"></div>
+    
       <div id="fade-overlay"></div>
     
 <div id="dialog-background"></div>
@@ -805,6 +835,9 @@ function applyDialogStyle(box, style) {
     if (line.triggers) {
         line.triggers.forEach(trig => handleTrigger(trig));
     }
+        if (line.choices && line.choices.length > 0) {
+        showChoices(line.choices);
+    }
 
     document.getElementById("dialog-speaker").textContent = line.speaker || "";
     applyFontSetting();
@@ -882,6 +915,76 @@ function handleBranch(trig) {
         console.error("Failed to load dialogue:", sceneName, err);
     }
 }
+
+let _qteTimer = null;
+
+function triggerGameOver(sfxPath) {
+    const fade = document.getElementById("fade-overlay");
+    const bg = document.getElementById("dialog-background");
+    
+    if (sfxPath) new Audio(sfxPath).play().catch(e => {});
+
+    fade.style.transition = "none";
+    fade.style.opacity = 1;
+    fade.style.background = "black";
+
+    setTimeout(() => {
+        bg.style.backgroundImage = "url('backgrounds/gameover.png')";
+        bg.style.display = "block";
+        fade.style.transition = "opacity 1s ease";
+        fade.style.opacity = 0;
+        closeDialog();
+    }, 100);
+}
+
+function handleAction(action) {
+    if (!action) return;
+
+    if (action.flag) gameFlags[action.flag] = action.value;
+    if (action.meter) meters[action.meter] += action.value;
+    
+    if (action.sfx) new Audio(action.sfx).play().catch(e => {});
+
+    if (action.type === "gameOver") {
+        triggerGameOver(action.sfx);
+    } else if (action.scene) {
+        loadDialogue(action.scene);
+    }
+}
+
+function showChoices(choices) {
+    const container = document.getElementById("choice-container");
+    container.innerHTML = "";
+    container.style.display = "flex";
+    
+    const qteChoice = choices.find(c => c.timer);
+    
+    if (qteChoice) {
+        let timeLeft = qteChoice.timer;
+        const start = Date.now();
+        
+        _qteTimer = setInterval(() => {
+            const elapsed = Date.now() - start;
+            if (elapsed >= qteChoice.timer) {
+                clearInterval(_qteTimer);
+                container.style.display = "none";
+                handleAction(qteChoice.onFail);
+            }
+        }, 50);
+    }
+
+    choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.className = "choice-btn";
+        btn.textContent = choice.text;
+        btn.onclick = () => {
+            clearInterval(_qteTimer);
+            container.style.display = "none";
+            handleAction(choice.onSelect);
+        };
+        container.appendChild(btn);
+    });
+}
     
 function showDialog(lines, opts = {}) {
     _dialogQueue = normalizeDialogLines(lines, opts.style);
@@ -921,6 +1024,7 @@ function closeDialog() {
       finishTyping(document.getElementById("dialog-text"), _currentOnFinish);
       return;
     }
+      if (document.getElementById("choice-container").style.display === "flex") return;
 
     if (_dialogQueue.length > 0) {
       renderLine(_dialogQueue.shift());
