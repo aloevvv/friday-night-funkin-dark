@@ -12,7 +12,7 @@
   {
     "speaker": "Pico",
     "mood": "neutral",
-    "position": "left",
+    "position": "right",
     "text": "I’ve been here for a couple days and I’ve never even seen him once.",
     "style": "pico",
     "triggers": []
