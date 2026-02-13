@@ -73,5 +73,13 @@
     "text": "Pico.",
     "style": "bf",
     "triggers": []
+  },
+  {
+    "speaker": "can i have dialogue w no text?",
+    "mood": "neutral",
+    "position": "right",
+    "text": "",
+    "style": "bf",
+    "triggers": []
   }
 ]
