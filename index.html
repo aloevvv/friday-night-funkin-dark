@@ -960,19 +960,11 @@ function showChoices(choices) {
     container.style.display = "flex";
     
     const qteChoice = choices.find(c => c.timer);
-    
     if (qteChoice) {
-        let timeLeft = qteChoice.timer;
-        const start = Date.now();
-        
-        _qteTimer = setInterval(() => {
-            const elapsed = Date.now() - start;
-            if (elapsed >= qteChoice.timer) {
-                clearInterval(_qteTimer);
-                container.style.display = "none";
-                handleAction(qteChoice.onFail);
-            }
-        }, 50);
+        _qteTimer = setTimeout(() => {
+            container.style.display = "none";
+            handleAction(qteChoice.onFail);
+        }, qteChoice.timer);
     }
 
     choices.forEach(choice => {
@@ -980,7 +972,7 @@ function showChoices(choices) {
         btn.className = "choice-btn";
         btn.textContent = choice.text;
         btn.onclick = () => {
-            clearInterval(_qteTimer);
+            clearTimeout(_qteTimer); 
             container.style.display = "none";
             handleAction(choice.onSelect);
         };
