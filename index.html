@@ -739,27 +739,22 @@ function finishTyping(element, onFinish = null) {
   if (onFinish) onFinish();
 }
 
-function normalizeDialogLines(textOrLines, defaultStyle) {
-  const lines = Array.isArray(textOrLines) ? textOrLines.slice() : [String(textOrLines)];
-  return lines.map(line => {
+function normalizeDialogLines(input, defaultStyle) {
+  const rawLines = Array.isArray(input) ? input : [input];
+
+  return rawLines.map(line => {
     if (typeof line === 'string') {
       return { 
-        speaker: null, 
         text: line, 
-        style: defaultStyle || 'dialog', 
-        effect: null, 
-        mood: null, 
-        position: 'center',
-        background: null,
-        triggers: [],
-        choices: []
+        speaker: null, mood: null, position: 'center',
+        style: defaultStyle || 'dialog', triggers: [], choices: [] 
       };
     }
     return {
       speaker: line.speaker || null,
       mood: line.mood || null,
       position: line.position || 'center',
-      text: line.text != null ? String(line.text) : '',
+      text: line.text !== undefined ? String(line.text) : '',
       style: line.style || defaultStyle || 'dialog',
       effect: line.effect || null,
       background: line.background || null,
@@ -768,6 +763,7 @@ function normalizeDialogLines(textOrLines, defaultStyle) {
     };
   });
 }
+
 
     function applyFontSetting() {
   const textDiv = document.getElementById("dialog-text");
@@ -944,7 +940,6 @@ function handleAction(action) {
 
     if (action.flag) gameFlags[action.flag] = action.value;
     if (action.meter) meters[action.meter] += action.value;
-    
     if (action.sfx) new Audio(action.sfx).play().catch(e => {});
 
     if (action.type === "gameOver") {
@@ -959,6 +954,8 @@ function showChoices(choices) {
     container.innerHTML = "";
     container.style.display = "flex";
     
+    clearTimeout(_qteTimer);
+
     const qteChoice = choices.find(c => c.timer);
     if (qteChoice) {
         _qteTimer = setTimeout(() => {
@@ -972,7 +969,7 @@ function showChoices(choices) {
         btn.className = "choice-btn";
         btn.textContent = choice.text;
         btn.onclick = () => {
-            clearTimeout(_qteTimer); 
+            clearTimeout(_qteTimer);
             container.style.display = "none";
             handleAction(choice.onSelect);
         };
