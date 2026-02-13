@@ -75,11 +75,11 @@
     "triggers": []
   },
   {
-    "speaker": "can i have dialogue w no text?",
+    "speaker": "Pico",
     "mood": "neutral",
-    "position": "right",
-    "text": "",
-    "style": "bf",
+    "position": "left",
+    "text": "He sounds upset.",
+    "style": "picothink",
     "triggers": []
-  }
+  },
 ]
