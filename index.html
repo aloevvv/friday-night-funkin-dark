@@ -919,20 +919,26 @@ let _qteTimer = null;
 function triggerGameOver(sfxPath) {
     const fade = document.getElementById("fade-overlay");
     const bg = document.getElementById("dialog-background");
-    
+    const box = document.getElementById("dialog-box");
+    const choice = document.getElementById("choice-container");
+
     if (sfxPath) new Audio(sfxPath).play().catch(e => {});
 
+    box.style.display = "none";
+    choice.style.display = "none";
+    _dialogQueue = []; 
+
     fade.style.transition = "none";
-    fade.style.opacity = 1;
     fade.style.background = "black";
+    fade.style.opacity = 1;
+
+    bg.style.backgroundImage = "url('backgrounds/gameover.png')";
+    bg.style.display = "block";
 
     setTimeout(() => {
-        bg.style.backgroundImage = "url('backgrounds/gameover.png')";
-        bg.style.display = "block";
-        fade.style.transition = "opacity 1s ease";
+        fade.style.transition = "opacity 1.5s ease"; 
         fade.style.opacity = 0;
-        closeDialog();
-    }, 100);
+    }, 500); 
 }
 
 function handleAction(action) {
